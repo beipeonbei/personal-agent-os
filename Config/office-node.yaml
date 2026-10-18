@@ -1,0 +1,41 @@
+# Office Node 配置（公司电脑）
+# 本文件随 GitHub 仓库同步；node 标识用于提交信息前缀与双节点一致性检查。
+
+node:
+  id: office
+  name: Office Node（公司电脑）
+  role: 执行与开发节点
+  responsibilities:
+    - 办公
+    - 研究
+    - 开发
+    - 任务执行
+
+components:
+  m365_copilot: ready        # Chief Agent，唯一日常入口（企业环境既有）
+  vscode: required
+  git: required
+  github_copilot: required
+  codebuddy: required
+  obsidian: required
+  openhands: required        # 待安装
+  cursor: optional           # 推荐档，可选
+  docker_desktop: recommended # 公司策略允许再装
+  wsl2: not_installed        # Home Node 专属
+  hermes: not_installed      # 未来阶段（Q2）
+  deepseek_harness: not_installed  # 未来阶段（Q3）
+
+sync:
+  knowledge:
+    channel: onedrive        # Vault 经 OneDrive 同步
+    vault_path: D:/Personal-Agent-OS/Vault
+  gitops:
+    channel: github
+    repo: personal-agent-os
+    commit_prefix: "[office]"
+  memory: obsidian_single_source  # V1 单源；Hermes 部署后改为双层（方案 3.3）
+  agent_config: github       # Agents/ 随仓库同步
+
+entry:
+  chief: m365_copilot
+  single_entry: true         # 禁止多入口并行

@@ -1,0 +1,79 @@
+# Agent 角色定义（Agent Config Sync 载体）
+# 规范见 agent-schema.md；任何修改必须提交仓库，另一端 pull 后生效。
+# 当前在岗：仅 Chief（M365 Copilot）。其余为定义预留，等待 Runtime（DeepSeek Harness）上线后激活。
+
+agents:
+  - id: chief
+    name: Chief Agent
+    role: chief
+    status: active            # active = 在岗；reserved = 定义预留
+    host: m365-copilot        # 承载组件
+    entry: true               # 唯一日常入口
+    responsibilities:
+      - 日常唯一入口与主脑
+      - 任务理解与派发（派发给 OpenHands / 各执行 Agent）
+      - 跨节点工作的发起与验收
+    tools:
+      - obsidian              # 读写 Vault
+      - github                # 仓库操作
+    policy:
+      single_entry: true      # 禁止与其他入口并行提问
+      memory_write: via-vault # 记忆写入只走 Vault 通道
+
+  - id: research
+    name: Research Agent
+    role: research
+    status: reserved
+    host: tbd                 # 未来由 Hermes 驱动
+    responsibilities:
+      - 检索与调研
+      - 资料汇总与线索索引（落 Vault/Knowledge）
+    tools:
+      - browser-mcp           # 依赖 MCP 接入，见 ../MCP/mcp-plan.md
+      - obsidian
+    policy:
+      source_traceable: true  # 结论必须可溯源
+
+  - id: coding
+    name: Coding Agent
+    role: coding
+    status: reserved
+    host: openhands           # 经 OpenHands 执行中心落地
+    responsibilities:
+      - 编码执行（Projects/ 范围内）
+      - 按 Chief 派发的任务单自主执行并交付
+    tools:
+      - filesystem
+      - git
+      - openhands-sandbox
+    policy:
+      workspace: D:/Personal-Agent-OS/Projects
+      log_to: D:/Personal-Agent-OS/Logs
+
+  - id: browser
+    name: Browser Agent
+    role: browser
+    status: reserved
+    host: openhands
+    responsibilities:
+      - 浏览器任务（依赖 Browser MCP）
+      - 网页信息采集与结构化摘录
+    tools:
+      - browser-mcp
+    policy:
+      no_credential_storage: true
+
+  - id: ops
+    name: Ops Agent
+    role: ops
+    status: reserved
+    host: tbd                 # 未来由 Hermes / Harness 调度
+    responsibilities:
+      - 同步巡检（OneDrive 冲突、Git 状态）
+      - 配置治理与日志巡检
+      - 双节点一致性检查（目录树比对）
+    tools:
+      - filesystem
+      - git
+    policy:
+      read_only_default: true # 默认只读，修复动作需 Chief 派发
