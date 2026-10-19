@@ -23,7 +23,7 @@ components:
   wsl2: required             # Home Node 专属
   cursor: recommended
   codebuddy: recommended
-  hermes: not_installed      # 未来阶段（Q2），本节点优先部署
+  hermes: ready             # 2026-10-19 接入：v0.21.7 桌面端已启用，Memory Layer 接管中
   deepseek_harness: not_installed  # 未来阶段（Q3），本节点优先部署
 
 sync:

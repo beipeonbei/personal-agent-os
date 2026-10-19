@@ -1,0 +1,3 @@
+# Hermes 记忆导出区（memory-export）
+# 规则：Hermes 长期记忆每日导出为 YYYY-MM-DD.md 落本目录；Vault 为权威源，冲突 Vault 赢。
+# 详见 ../identity.md「记忆分流规则」。
