@@ -1,0 +1,82 @@
+# Personal Agent OS — 系统状态固化文件
+# 本文件是系统当前状态的机器可读快照；随 GitHub 同步，双节点一致。
+# 变更纪律：任何组件状态变化时先改本文件再提交；状态值取自实测，不写推测。
+
+version: beta-0.9
+last_verified: 2026-10-20
+
+chief_agent:
+  component: M365 Copilot
+  status: ready
+  role: 唯一日常入口 / 主脑 / 任务派发
+  node: office（公司环境）+ home（可用）
+  single_entry: true
+
+memory_layer:
+  manager: Hermes Agent v0.21.7
+  manager_status: running          # 2026-10-20 实测：5 个进程
+  memory_source:                   # Hermes 侧记忆存储
+    soul: C:/Users/Administrator/AppData/Local/hermes/SOUL.md
+    memory: C:/Users/Administrator/AppData/Local/hermes/memories/MEMORY.md
+    user: C:/Users/Administrator/AppData/Local/hermes/memories/USER.md
+  authoritative: Obsidian Vault    # 冲突时 Vault 赢
+  vault_anchor: Vault/AgentOS/identity.md
+  export_dir: Vault/AgentOS/memory-export
+  knowledge_source: Obsidian Vault # 六目录：Inbox/Projects/Research/AgentOS/Startup/Daily
+  status: ready
+
+runtime_layer:
+  component: DeepSeek Harness (dsh) 0.1.1-rc.2
+  status: degraded                 # 服务在线，模型连接不可用
+  webui: http://127.0.0.1:8080
+  webui_status: up                 # 2026-10-20 实测：端口监听
+  api_key_status: invalid          # 401：key 失效，用户动作（充值/换 key）
+  autostart_task: DSH-DeepSeekHarness
+  autostart_state: Ready
+  blocked_by: deepseek_api_key
+
+execution_layer:
+  component: OpenHands (ghcr.io/openhands/agent-canvas:1.27.1)
+  container: openhands
+  status: up                       # 2026-10-20 实测：Up 8 hours
+  canvas: http://localhost:8000/canvas
+  canvas_status: 200
+  restart_policy: unless-stopped
+  mounts:
+    - D:/Personal-Agent-OS -> /projects
+    - C:/Users/Administrator/.openhands -> /home/openhands/.openhands
+  engine: Docker Desktop 29.8.2
+
+knowledge_layer:
+  component: Obsidian
+  vault: D:/Personal-Agent-OS/Vault
+  vault_dirs: [Inbox, Projects, Research, AgentOS, Startup, Daily]
+  templates: Vault/AgentOS/templates
+  sync: OneDrive + Git 双轨
+  status: ready
+
+gitops_layer:
+  component: GitHub
+  repo: personal-agent-os
+  url: https://github.com/beipeonbei/personal-agent-os
+  branch: main
+  commit_prefix: "[home] / [office]"
+  last_commit: 58ecf3d
+  status: ready
+
+node_state:
+  home:
+    node_id: home
+    status: online
+    components: [git, github, obsidian, docker, openhands, hermes, dsh, vscode, cursor, codebuddy]
+  office:
+    node_id: office
+    status: not_deployed           # Phase 1.5 未执行
+    components: []
+
+blocking_items:
+  - id: deepseek_api_key
+    layer: runtime_layer
+    description: DeepSeek API key 失效（401），DSH 无法连接模型
+    owner: user
+    action: 充值或换新 key，更新 DEEPSEEK_API_KEY 后重启 DSH
