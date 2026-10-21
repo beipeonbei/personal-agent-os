@@ -80,3 +80,29 @@ blocking_items:
     description: DeepSeek API key 失效（401），DSH 无法连接模型
     owner: user
     action: 充值或换新 key，更新 DEEPSEEK_API_KEY 后重启 DSH
+  - id: office_node_not_deployed
+    layer: node_state
+    description: Office Node 未部署，双节点尚未成立
+    owner: user_onsite
+    action: 按 Docs/Integration-Plans.md Phase 1.5 在公司电脑执行
+
+# 代码库审计追踪（来源：Docs/Codebase-Audit-20261021.md；方案：Docs/Full-Run-Plan-v2.md）
+audit:
+  date: 2026-10-21
+  verdict: 分层合理，但缺可执行物 / 可追溯物 / 已接物件三类
+  weakness_count: 12
+  weaknesses:
+    - {id: W1,  kind: coverage,    item: 零自动化脚本,           target: 五个脚本可独立运行并输出 PASS/FAIL, stage: 1, status: PLANNED}
+    - {id: W2,  kind: coverage,    item: Vault 六目录空壳,       target: 五个空目录各有至少一篇真实笔记,     stage: 3, status: PLANNED}
+    - {id: W3,  kind: coverage,    item: Logs 零运行日志,        target: 按日归档的真实运行记录,             stage: 3, status: PLANNED}
+    - {id: W4,  kind: structure,   item: MCP 只有计划零接入,     target: 至少 2 个 MCP 配置落库且可用,       stage: 4, status: PLANNED}
+    - {id: W5,  kind: structure,   item: Agent Team 仅 1/5 在岗, target: active 至少 2 个且 reserved 有激活条件, stage: 4, status: PLANNED}
+    - {id: W6,  kind: structure,   item: 占位目录无实质配置,     target: 三目录各有可照抄的运行清单,         stage: 2, status: PLANNED}
+    - {id: W7,  kind: improvement, item: Portal 状态模糊,        target: 标注 SPEC_FROZEN 与触发条件,        stage: 4, status: PLANNED}
+    - {id: W8,  kind: improvement, item: 无验证/测试/CI,         target: verify-system.ps1 一键输出一致性报告, stage: 1, status: PLANNED}
+    - {id: W9,  kind: improvement, item: 无备份机制,             target: 备份可执行且带文件数校验,           stage: 1, status: PLANNED}
+    - {id: W10, kind: improvement, item: 运行沉淀极浅,           target: 形成每日 pull/push 与日志节奏,      stage: ongoing, status: PLANNED}
+    - {id: W11, kind: coverage,    item: Projects 近乎空,        target: 产出按主题归档到 Projects/<topic>/,  stage: ongoing, status: PLANNED}
+    - {id: W12, kind: improvement, item: PowerShell 5.1 中文编码隐患, target: 脚本纯 ASCII 注释，运行显示正常, stage: 1, status: PLANNED}
+  maturity_projection: {current: 72, after_stage1_2: 78, after_stage3_4: 84, after_stage5: 92, after_stage6: 96}
+  next_stage: 1（自律脚本，无外部依赖，确认即开工）
