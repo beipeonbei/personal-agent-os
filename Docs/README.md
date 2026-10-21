@@ -9,6 +9,17 @@ Personal Agent OS 的全部架构级文档，随 GitHub 仓库同步（GitOps Sy
 | `Dual-Node-Personal-Agent-OS-V1.md` | **主文档**：双节点架构、节点职责与安装顺序、四层同步、OpenHands 定位论证、Portal MVP、第一周检查表、90 天路线图、12 个月路线、V1 MVP 六组件取舍 |
 | `README.md` | 本说明 |
 
+## 架构治理类（按裁决优先级排序，冲突时上者赢）
+
+| 文件 | 说明 |
+| --- | --- |
+| `Architecture-Alignment-Decision.md` | **裁决文档**（2026-10-22）：路线 C 双轨、Constitution 以 identity.md + 诚实纪律为基底、编号沿用 L92/A1-A4/I-1~I-7、C-3 维持直写 Vault 及其四条补偿纪律；双轨划界规则、合流顺序、七项禁止的解禁条件；新识别冲突 C-4 / C-5 待裁决 |
+| `Architecture-Gap-Analysis.md` | **差距分析**（2026-10-21）：目标架构 vs 仓库实测；地基四项全为零；保留项清单；三路线候选与裁决点 |
+| `Full-Run-Plan-v2.md` | **轨 A 计划**：阶段 1–7（现称轨 A 阶段 1–7）工程补齐方案；顶部有编号注记，与裁决文档冲突处以裁决文档为准 |
+| `Codebase-Audit-20261021.md` | **审计基线**：12 个薄弱点 W1–W12 与成熟度 72/100 分项 |
+
+> 注：本目录其余文档（各组件接入报告、健康检查、runbook、KPI 等）属实测记录与操作手册，不列入治理裁决链。裁决优先级为：用户逐项裁决 > `Architecture-Alignment-Decision.md` > 目标架构指令 > `Full-Run-Plan-v2.md` > 其他 Docs。
+
 ## 维护纪律
 
 1. 架构变更顺序：**先改文档 → 再改配置 → 后改实现**。

@@ -126,17 +126,41 @@ alignment:
     GOALS.md: MISSING
     RULES.md: MISSING
   route_candidates: [A_kernel_first, B_v2_continue, C_dual_track]
-  route_recommendation: C_dual_track（待裁决）
+  route_recommendation: C_dual_track
   conflicts:
-    - {id: C-1, kind: numbering, detail: v2 阶段 5/8/9 与目标 Stage 5/8/9 同名异义}
-    - {id: C-2, kind: ordering,  detail: v2 先接 MCP vs 目标 Kernel YES 后才做 MCP}
-    - {id: C-3, kind: write,     detail: memory-export 直写 Vault（权威源），须先立规则与签名}
+    - {id: C-1, kind: numbering, detail: v2 阶段 5/8/9 与目标 Stage 5/8/9 同名异义, resolution: MERGED, decision: v2 阶段 N 改称轨 A 阶段 N，附 Stage 对照表}
+    - {id: C-2, kind: ordering,  detail: v2 先接 MCP vs 目标 Kernel YES 后才做 MCP, resolution: TARGET_ORDER, decision: MCP 排在 Kernel Readiness YES 之后；v2 阶段 4 拆为 4a（配置，第一轨可做）/ 4b（MCP 接入，推迟）}
+    - {id: C-3, kind: write,     detail: memory-export 直写 Vault（权威源），须先立规则与签名, resolution: DIRECT_WRITE_KEPT, decision: 用户裁决维持直写；附四条补偿纪律，状态标 PARTIAL, risk: 签名机制落地前写入不可追溯，历史导出无法补签}
+    - {id: C-4, kind: ordering,  detail: v2 阶段 6 派发链与 Execution Broker 统一入口重叠，先建派发链将形成双入口, resolution: PENDING, decision: 建议推迟到 Broker 之后，待用户确认}
+    - {id: C-5, kind: write,     detail: v2 阶段 5 移动 Vault 真实内容至 OneDrive 并 junction 回指，属权威源物理位置变更，快照签名缺失时完整性无从校验, resolution: PENDING, decision: 建议排在账本 schema 之后，或执行前后各做全量校验，待用户确认}
+  decisions:                     # 2026-10-22 用户逐项裁决；来源 Docs/Architecture-Alignment-Decision.md
+    date: 2026-10-22
+    decided_by: user
+    decision_doc: Docs/Architecture-Alignment-Decision.md
+    route: C_dual_track
+    constitution_basis: identity.md + 诚实纪律演进（不另起独立宪法）
+    constitution_target: Vault/AgentOS/CONSTITUTION.md（待建，落点待用户确认）
+    numbering: KEEP_ORIGINAL     # 沿用 L92 / A1-A4 / I-1~I-7，另附「编号 → 本仓库落点」对照表
+    c3: DIRECT_WRITE_KEPT
+  dual_track:
+    track_1_engineering:         # 工程补齐，可立即开工
+      scope: [轨A阶段1 五个自律脚本, 轨A阶段2 三目录落真运行清单, 轨A阶段3 Vault填充+日志约定, 轨A阶段4a roles补齐+Portal标注]
+      boundary:
+        - 不得写账本（events.jsonl / decisions.jsonl / snapshot）
+        - 不得写权威源（identity.md / USER.md / GOALS.md / RULES.md）；例外仅 memory-export 目录
+        - 不得建 Identity / Budget / Broker
+        - health-check 与 verify-system 必须只读，仅输出 PASS/FAIL
+        - 脚本纯 ASCII 注释（W12）
+    track_2_governance:          # 治理地基，严格顺序，仅产出规则与 schema 文档
+      order: [Constitution, TaskStore_Schema, ledger_schema, Gates(L92/A1-A4), Invariants(I-1~I-7), GOALS.md+RULES.md]
+    convergence:                 # 两轨都到位后
+      order: [identity_runtime, budget_runtime, execution_broker+authenticity, bypass_tests(全FAIL), kernel_readiness_review, portal/mcp_4b/multi_agent]
   forbidden_until_aligned:
-    - identity_runtime
-    - budget_runtime
-    - execution_broker
-    - events.jsonl
-    - decisions.jsonl
-    - bypass_tests（无对象，写必假）
-    - marking_partial_as_enforced
-  pending_decisions: [路线 A/B/C, Constitution 口径, Gate 与不变式编号, C-1/C-2/C-3 取舍]
+    - identity_runtime          # 解禁：第二轨 1-5 步完成 + GOALS.md/RULES.md 存在
+    - budget_runtime            # 解禁：同上
+    - execution_broker          # 解禁：Identity 与 Budget Runtime 均建成
+    - events.jsonl              # 解禁：第二轨 ledger schema 定案
+    - decisions.jsonl           # 解禁：第二轨 ledger schema 定案
+    - bypass_tests              # 解禁：Broker 与 Gate 真实存在且有可被绕过对象
+    - marking_partial_as_enforced  # 永久禁止，非阶段性；Enforced 须满足四判据
+  pending_decisions: [I-2/I-3 是否启用, C-4 处置, C-5 处置, CONSTITUTION.md 落点确认]
