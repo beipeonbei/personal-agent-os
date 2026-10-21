@@ -106,3 +106,37 @@ audit:
     - {id: W12, kind: improvement, item: PowerShell 5.1 中文编码隐患, target: 脚本纯 ASCII 注释，运行显示正常, stage: 1, status: PLANNED}
   maturity_projection: {current: 72, after_stage1_2: 78, after_stage3_4: 84, after_stage5: 92, after_stage6: 96}
   next_stage: 1（自律脚本，无外部依赖，确认即开工）
+
+# 架构对齐（来源：Docs/Architecture-Gap-Analysis.md）
+alignment:
+  date: 2026-10-21
+  target_architecture_source: Home Node Master Execution Directive（Stage 5 指令）
+  target_architecture_status: TARGET_NOT_CURRENT   # 目标架构，非仓库现状
+  stage5_status: PAUSED                            # 地基缺失，暂停执行
+  foundation_status:
+    constitution: MISSING
+    taskstore: MISSING
+    event_ledger: MISSING      # 全库 .jsonl = 0
+    decision_ledger: MISSING
+    snapshot: MISSING
+    gates: MISSING             # L92 / A1-A4，0 命中
+    invariants: MISSING        # I-1 / I-4 / I-5 / I-6 / I-7，0 命中
+  identity_binding_files:
+    USER.md: PRESENT
+    GOALS.md: MISSING
+    RULES.md: MISSING
+  route_candidates: [A_kernel_first, B_v2_continue, C_dual_track]
+  route_recommendation: C_dual_track（待裁决）
+  conflicts:
+    - {id: C-1, kind: numbering, detail: v2 阶段 5/8/9 与目标 Stage 5/8/9 同名异义}
+    - {id: C-2, kind: ordering,  detail: v2 先接 MCP vs 目标 Kernel YES 后才做 MCP}
+    - {id: C-3, kind: write,     detail: memory-export 直写 Vault（权威源），须先立规则与签名}
+  forbidden_until_aligned:
+    - identity_runtime
+    - budget_runtime
+    - execution_broker
+    - events.jsonl
+    - decisions.jsonl
+    - bypass_tests（无对象，写必假）
+    - marking_partial_as_enforced
+  pending_decisions: [路线 A/B/C, Constitution 口径, Gate 与不变式编号, C-1/C-2/C-3 取舍]
