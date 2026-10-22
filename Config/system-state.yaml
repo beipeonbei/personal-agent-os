@@ -16,7 +16,7 @@ track_a:                       # 第一轨：工程补齐
   stage6_runtime_chain: DEFERRED   # 推迟至 Execution Broker 之后（C-4）
 track_b:                       # 第二轨：治理地基
   step1_constitution: DONE     # Vault/AgentOS/CONSTITUTION.md（承继条款 + 补写五条 + C-3 例外登记）
-  step2_taskstore: MISSING
+  step2_taskstore: DONE         # Docs/TaskStore-Schema.md（仅 schema 与流转规则，无实现、无数据文件）
   step3_ledger_schema: MISSING
   step4_gates: MISSING         # L92 / A1-A4
   step5_invariants: MISSING    # I-1~I-7（I-2/I-3 是否启用待确认）
@@ -28,7 +28,16 @@ new_findings:
     item: Docker Desktop 与 Hermes 均无开机自启
     evidence: 2026-10-22 health-check 初测 docker_engine/hermes_process 均 FAIL，手动拉起后恢复
     impact: 机器重启后系统不会自恢复（仅 DSH 因计划任务在线）
-    status: OPEN
+    status: FIXED
+    fixed_on: 2026-10-22
+    fix_detail: >-
+      Docker Desktop settings-store.json AutoStart=false -> true（退出后修改，重启后复核保留 True）；
+      Hermes 注册计划任务 AgentOS-Hermes-Keepalive（AtLogOn + 每 15 分钟重复，RunLevel Limited），
+      动作为 Config/scripts/ensure-hermes.ps1（仅经 Hermes.lnk 启动，禁手动 gateway run），
+      动作留痕 Logs/ensure-hermes.log（不入仓）。复测 health-check 六维 PASS。
+    residual: >-
+      重启后自启效果需下次真实重启最终确认；当前只验证了机制就位（AutoStart 保留、
+      任务 Ready、脚本 exit 0）。若重启后仍有 FAIL，按 health-check 输出定位。
 
 chief_agent:
   component: M365 Copilot
