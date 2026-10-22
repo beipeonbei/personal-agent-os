@@ -1,32 +1,44 @@
-# Hermes — Memory / Identity 层（未安装）
+# Hermes — Memory / Identity 层（已接入）
 
-> **当前状态：两台电脑均未安装 Hermes。本目录是“未来从零部署”的计划占位，不虚构任何现存能力。**
+> 实测状态（2026-10-22）：**v0.21.7 运行中**（桌面端 + CLI 共 5 个进程，health-check 全 PASS）。
+> 本目录不再是"未安装"占位。Memory 接管完成于 2026-10-19（见 `Docs/Hermes-Integration-Report.md`）。
+> 唯一遗留：Hermes 侧 `memories/USER.md` 仍是 96B 旧版，与 Vault 权威版 `Vault/AgentOS/USER.md` 未对齐（待你确认后写入）。
 
-## 规划定位（Q2 落地）
+## 启动入口（真实路径）
 
-Hermes 部署后接管 Memory 层的四个要素：
+| 用途 | 路径 |
+| --- | --- |
+| 桌面端可执行文件 | `C:\Users\Administrator\AppData\Local\hermes\hermes-agent\apps\desktop\release\win-unpacked\Hermes.exe` |
+| 开始菜单快捷方式（推荐入口） | `C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Hermes.lnk` |
+| CLI | `C:\Users\Administrator\AppData\Local\hermes\bin\hermes.exe` |
+| 配置 | `C:\Users\Administrator\AppData\Local\hermes\config.yaml`（+ profile 覆盖 `profiles\test-project\config.yaml`） |
+| 数据（memories/skills/sessions） | `C:\Users\Administrator\AppData\Local\hermes\` |
 
-| 要素 | 说明 | 数据落点 |
-| --- | --- | --- |
-| Memory | 对话与执行记忆的沉淀 | 导出 Markdown → `../Vault/Long-term/` |
-| Identity | “我是谁、原则、边界” | 与 `../Vault/Identity/` 对齐 |
-| User Profile | 用户模型（偏好、习惯、约束） | 本目录 `user-profile.md`（部署时建） |
-| Skill | 可复用技能包 | 本目录 `skills/`（部署时建） |
+桌面端自拉命令：`hermes serve --host 127.0.0.1 --port 0`（GUI 专用随机端口）。
 
-## 部署前置研究项（方案 3.3）
+## 启动（照抄即可）
 
-1. Hermes 记忆存储与 Obsidian Vault 的映射关系（哪些记忆放哪层）；
-2. 导出/导入协议（Hermes → Markdown → Vault 的单向或双向流）；
-3. 冲突裁决规则（以哪一层为权威源）；
-4. Chief（M365 Copilot）与 Hermes 的分工成文：谁答“是什么/为什么”，谁答“做什么/怎么做”。
+```powershell
+Start-Process 'C:\Users\Administrator\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Hermes.lnk'
+```
 
-## 部署顺序（Home Node 优先）
+验证：
 
-1. Home Node 从零安装（当前无任何既有配置可依赖）；
-2. 配置写入本目录并提交仓库；
-3. Memory 导出链路打通并连续运行 7 天验证；
-4. 工作流成熟后再评估 Office Node 部署。
+```powershell
+(Get-Process Hermes, hermes -ErrorAction SilentlyContinue | Measure-Object).Count   # 期望 5
+powershell -ExecutionPolicy Bypass -File 'D:\Personal-Agent-OS\Config\scripts\health-check.ps1'
+```
 
-## 状态
+## 铁律（违反会导致双老板互杀）
 
-- 当前状态：**未安装**。90 天路线阶段 2（Day 31–60）从零部署，见方案第七部分。
+1. **唯一启动源 = 桌面端自拉**。禁止手动 `gateway run`——第二个入口会与桌面端互杀，表现为 gateway 反复重启。
+2. 改 `config.yaml` 后靠 `non_interactive_local_changes: keep` 保护本地改动，重开桌面端即生效。
+3. 版本看 `runtime-release.json`，不是 `hermes-agent` 目录版本。
+4. Hermes 配置含密钥，**禁止入仓**；本目录只放说明，不放配置副本。
+5. 记忆回流：由 `Config\scripts\memory-export.ps1` 导出到 `Vault/AgentOS/memory-export/`，状态 PARTIAL（无签名）。
+
+## 未解决的缺口
+
+- 开机不自启：Hermes 未注册登录启动，重启机器后需手动拉起（可挂 `ensure_hermes.ps1` 到计划任务，待你决定是否接入）
+- USER.md 双份未对齐（Hermes 侧 96B vs Vault 权威版 5180B）
+- 与 Vault 的 IDENTITY 回指未建立（SOUL.md 未回指 `Vault/AgentOS/identity.md`）

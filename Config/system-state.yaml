@@ -3,7 +3,32 @@
 # 变更纪律：任何组件状态变化时先改本文件再提交；状态值取自实测，不写推测。
 
 version: beta-0.9
-last_verified: 2026-10-20
+last_verified: 2026-10-22
+
+# 路线 C 双轨进度（依据 Docs/Architecture-Alignment-Decision.md）
+track_a:                       # 第一轨：工程补齐
+  stage1_scripts: DONE         # Config/scripts/ 五个脚本，health-check 六维 PASS
+  stage2_run_lists: DONE       # OpenHands/run.ps1、Hermes/README、Harness/README
+  stage3_vault_logs: DONE      # Vault 五目录各有真实笔记；Logs 按日归档首篇已落
+  stage4a_config: DONE         # roles.yaml（active=2，reserved 均有激活条件）；Portal 标 SPEC_FROZEN
+  stage4b_mcp: DEFERRED        # 推迟至 Kernel Readiness YES 之后
+  stage5_dual_node: PENDING_USER   # 待批准（C-5：建议排在账本 schema 后）
+  stage6_runtime_chain: DEFERRED   # 推迟至 Execution Broker 之后（C-4）
+track_b:                       # 第二轨：治理地基
+  step1_constitution: DONE     # Vault/AgentOS/CONSTITUTION.md（承继条款 + 补写五条 + C-3 例外登记）
+  step2_taskstore: MISSING
+  step3_ledger_schema: MISSING
+  step4_gates: MISSING         # L92 / A1-A4
+  step5_invariants: MISSING    # I-1~I-7（I-2/I-3 是否启用待确认）
+  step6_goals_rules: MISSING   # GOALS.md / RULES.md
+constitution_path: Vault/AgentOS/CONSTITUTION.md
+new_findings:
+  - id: W13
+    kind: coverage
+    item: Docker Desktop 与 Hermes 均无开机自启
+    evidence: 2026-10-22 health-check 初测 docker_engine/hermes_process 均 FAIL，手动拉起后恢复
+    impact: 机器重启后系统不会自恢复（仅 DSH 因计划任务在线）
+    status: OPEN
 
 chief_agent:
   component: M365 Copilot

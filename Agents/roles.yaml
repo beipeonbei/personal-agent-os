@@ -1,13 +1,15 @@
 # Agent 角色定义（Agent Config Sync 载体）
 # 规范见 agent-schema.md；任何修改必须提交仓库，另一端 pull 后生效。
-# 当前在岗：仅 Chief（M365 Copilot）。其余为定义预留，等待 Runtime（DeepSeek Harness）上线后激活。
+# 2026-10-22 更新（轨 A 阶段 4a）：coding 转 active；research/ops host 由 tbd 改为 hermes；
+# 每个 reserved 项补 activation_condition（有触发条件，不再是空占位）。
+# 在岗：chief、coding（2/5）。其余 3 个保留待激活。
 
 agents:
   - id: chief
     name: Chief Agent
     role: chief
     status: active            # active = 在岗；reserved = 定义预留
-    host: m365-copilot        # 承载组件
+    host: m365-copilot        # 承载组件（Office Node；Home Node 由 hermes 代行）
     entry: true               # 唯一日常入口
     responsibilities:
       - 日常唯一入口与主脑
@@ -24,10 +26,13 @@ agents:
     name: Research Agent
     role: research
     status: reserved
-    host: tbd                 # 未来由 Hermes 驱动
+    host: hermes              # 已明确承载（原 tbd）
+    activation_condition: >-
+      Hermes 常驻运行且已接入检索渠道；Browser MCP 接入完成（MCP Foundation 在
+      Kernel Readiness YES 之后）。满足前保持 reserved，不伪造为可用。
     responsibilities:
       - 检索与调研
-      - 资料汇总与线索索引（落 Vault/Knowledge）
+      - 资料汇总与线索索引（落 Vault/Research）
     tools:
       - browser-mcp           # 依赖 MCP 接入，见 ../MCP/mcp-plan.md
       - obsidian
@@ -37,7 +42,7 @@ agents:
   - id: coding
     name: Coding Agent
     role: coding
-    status: reserved
+    status: active            # 2026-10-22 转在岗：由 OpenHands 实际承担
     host: openhands           # 经 OpenHands 执行中心落地
     responsibilities:
       - 编码执行（Projects/ 范围内）
@@ -55,6 +60,9 @@ agents:
     role: browser
     status: reserved
     host: openhands
+    activation_condition: >-
+      Browser MCP 实际接入并有可用浏览器运行时；MCP Foundation 排在
+      Kernel Readiness YES 之后，此前不激活。
     responsibilities:
       - 浏览器任务（依赖 Browser MCP）
       - 网页信息采集与结构化摘录
@@ -67,7 +75,10 @@ agents:
     name: Ops Agent
     role: ops
     status: reserved
-    host: tbd                 # 未来由 Hermes / Harness 调度
+    host: hermes              # 已明确承载（原 tbd）
+    activation_condition: >-
+      Execution Broker 建成且 Task/Decision/Snapshot/Log 有统一写入入口后激活；
+      Broker 未建成前由人工调用 Config/scripts 下的只读脚本代替。
     responsibilities:
       - 同步巡检（OneDrive 冲突、Git 状态）
       - 配置治理与日志巡检
