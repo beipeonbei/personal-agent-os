@@ -18,7 +18,7 @@ track_b:                       # 第二轨：治理地基
   step1_constitution: DONE     # Vault/AgentOS/CONSTITUTION.md（承继条款 + 补写五条 + C-3 例外登记）
   step2_taskstore: DONE         # Docs/TaskStore-Schema.md（仅 schema 与流转规则，无实现、无数据文件）
   step3_ledger_schema: DONE     # Docs/Ledger-Schema.md（仅 schema/校验/哈希链/权限，无实现、无数据文件）
-  step4_gates: MISSING         # L92 / A1-A4
+  step4_gates: DEFINED         # Docs/Gate-Definition.md（L92/A1-A4 判据/触发点/FAIL/责任边界；可执行须等 Broker）
   step5_invariants: MISSING    # I-1~I-7（I-2/I-3 是否启用待确认）
   step6_goals_rules: MISSING   # GOALS.md / RULES.md
 constitution_path: Vault/AgentOS/CONSTITUTION.md
@@ -151,14 +151,14 @@ alignment:
   target_architecture_source: Home Node Master Execution Directive（Stage 5 指令）
   target_architecture_status: TARGET_NOT_CURRENT   # 目标架构，非仓库现状
   stage5_status: PAUSED                            # 地基缺失，暂停执行
-  foundation_status:
-    constitution: MISSING
-    taskstore: MISSING
-    event_ledger: MISSING      # 全库 .jsonl = 0
-    decision_ledger: MISSING
-    snapshot: MISSING
-    gates: MISSING             # L92 / A1-A4，0 命中
-    invariants: MISSING        # I-1 / I-4 / I-5 / I-6 / I-7，0 命中
+  foundation_status:          # 定义（schema/契约）与实例（数据文件/Runtime）分开登记
+    constitution: DEFINED     # B1：Vault/AgentOS/CONSTITUTION.md
+    taskstore: DEFINED        # B2：Docs/TaskStore-Schema.md（仅 schema，无实例）
+    event_ledger: SCHEMA_ONLY # B3：Docs/Ledger-Schema.md；events.jsonl 禁止提前创建
+    decision_ledger: SCHEMA_ONLY
+    snapshot: SCHEMA_ONLY
+    gates: DEFINED            # B4：Docs/Gate-Definition.md；可执行须等 Broker
+    invariants: MISSING       # B5 待做；I-2/I-3 是否启用待裁决
   identity_binding_files:
     USER.md: PRESENT
     GOALS.md: MISSING

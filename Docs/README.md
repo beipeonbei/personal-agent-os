@@ -15,6 +15,9 @@ Personal Agent OS 的全部架构级文档，随 GitHub 仓库同步（GitOps Sy
 | --- | --- |
 | `Architecture-Alignment-Decision.md` | **裁决文档**（2026-10-22）：路线 C 双轨、Constitution 以 identity.md + 诚实纪律为基底、编号沿用 L92/A1-A4/I-1~I-7、C-3 维持直写 Vault 及其四条补偿纪律；双轨划界规则、合流顺序、七项禁止的解禁条件；新识别冲突 C-4 / C-5 待裁决 |
 | `Architecture-Gap-Analysis.md` | **差距分析**（2026-10-21）：目标架构 vs 仓库实测；地基四项全为零；保留项清单；三路线候选与裁决点 |
+| `TaskStore-Schema.md` | **治理轨 B2**（2026-10-22）：Task 字段定义与状态机（CREATED→…→CLOSED，含 REJECTED/QUARANTINED），Gate 与不变式挂点；仅 schema，无实现、无数据文件 |
+| `Ledger-Schema.md` | **治理轨 B3**（2026-10-22）：Event / Decision / Snapshot 三类账本 Schema、Validation Rules、Hash-Chain Contract（SHA-256 链）、Authority Mapping（全部经 Broker 写入）；仅定义，禁止创建 `.jsonl` |
+| `Gate-Definition.md` | **治理轨 B4**（2026-10-26）：L92 总闸 + A1–A4 四类门禁的准入条件、阻断条件、状态转换规则、责任边界；状态 DEFINED，可执行须等 Execution Broker |
 | `Full-Run-Plan-v2.md` | **轨 A 计划**：阶段 1–7（现称轨 A 阶段 1–7）工程补齐方案；顶部有编号注记，与裁决文档冲突处以裁决文档为准 |
 | `Codebase-Audit-20261021.md` | **审计基线**：12 个薄弱点 W1–W12 与成熟度 72/100 分项 |
 
